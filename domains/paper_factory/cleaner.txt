@@ -1,0 +1,3 @@
+# init s01
+s01 cleansq s01->sqclean
+s01 cleanrd s01->rdclean

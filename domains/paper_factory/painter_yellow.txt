@@ -1,0 +1,2 @@
+# init s03
+s03 yellowrd s03->rdyellow

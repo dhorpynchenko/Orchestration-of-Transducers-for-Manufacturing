@@ -1,0 +1,4 @@
+cleansq
+cleanrd
+yellowrd
+greensq

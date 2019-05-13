@@ -1,0 +1,2 @@
+# init s02
+s02 greensq s02->sqgreen

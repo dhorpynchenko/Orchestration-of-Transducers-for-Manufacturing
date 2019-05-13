@@ -1,0 +1,5 @@
+# init s0
+s0 cleansq s1->sqclean
+s0 cleanrd s2->rdclean
+s1 greensq s0->sqgreen
+s2 yellowrd s0->rdyellow
