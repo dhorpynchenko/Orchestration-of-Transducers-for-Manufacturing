@@ -76,11 +76,11 @@ $ (out_{x', y'}, in_{x, y})$ - \textit{port bindings}, a connection between the 
 
 \begin{frame}
 \frametitle{Multi-transducers: Ports}
-A set $c$ of port bindings, henceforth called \textit{binding set}, must be consistent with a set of binding constraints $\mathcal{B}$, specified as boolean combinations of atoms of the form $ (out_{x', y'}; in_{x, y})$; a binding set c is said to be \textit{legal} iff $c \models \mathcal{B}$.\\
+A set $c$ of port bindings, henceforth called \textit{binding set}, must be consistent with a set of binding constraints $\mathcal{B}$, specified as boolean combinations of atoms of the form $ (out_{x', y'}, in_{x, y})$; a binding set c is said to be \textit{legal} iff $c \models \mathcal{B}$.\\
 We use the set $\mathcal{B}$ to impose three kinds of requirements: \\
 \begin{itemize}
-\item for all $x, y$ (with $x \in \{0, 1, . . . , m\}$ and $y \in \{1, . . . ,k_{x}\}$) there exists at most one $x', y'$ such that $ (out_{x', y'}; in_{x, y}) \in c$ (if, for some $z \in \{1, . . . , k_{x}\}$,$ in_{x,z}$ does not appear in $c$, its value is assumed to be empty, i.e., $val(in_{x,z}) = \epsilon)$;
-\item all physical output ports $out_{x', y'}$ occur in at most one binding $ (out_{x', y'}; in_{x, y}) \in c$
+\item for all $x, y$ (with $x \in \{0, 1, . . . , m\}$ and $y \in \{1, . . . ,k_{x}\}$) there exists at most one $x', y'$ such that $ (out_{x', y'}, in_{x, y}) \in c$ (if, for some $z \in \{1, . . . , k_{x}\}$,$ in_{x,z}$ does not appear in $c$, its value is assumed to be empty, i.e., $val(in_{x,z}) = \epsilon)$;
+\item all physical output ports $out_{x', y'}$ occur in at most one binding $ (out_{x', y'}, in_{x, y}) \in c$
 \item arbitrary requirements specifying, e.g., the possible physical connections between machines on the shop floor, or the set of virtual connections determined by the possible communication routes between resources.
 \end{itemize}
 \end{frame}
@@ -106,7 +106,9 @@ $$P = T_{1} \times . . . \times T_{m}$$
 a controller $C$ for $P$ is defined as:
 $$C : (\Sigma_{k})^{+} \to Cntl$$
 ,where $Cntl$ is denoting the set of all possible port binding sets.\\
+\begin{alertblock}{Note}
 Opposite to uni-transducers case, the controller binds ports, and all transducers $T_{1}, . . . , T_{m}$ get input (possibly empty) and move at every step.
+\end{alertblock}
 \end{frame}
 
 \begin{frame}
@@ -125,7 +127,10 @@ $val^{i}(out_{x,y}) = b^{i}$ if $(out_{x,y} in_{0,y'}) \in c^{i}$
 
 \begin{frame}
 \frametitle{Orchestration}
+Identically to uni-transducers case,
+\begin{theorem}
 $C$ realizes $T$ if $\tau^{o}(w, T) = \tau^{o}(w, C)$ for all $w$
+\end{theorem}
 \end{frame}
 
 \begin{frame}
@@ -158,8 +163,41 @@ $\delta((s, s_{1}, . . .  , s_{m}), a, c) = q_{err}$, otherwise.
 \end{frame}
 
 \begin{frame}
-\frametitle{Example}
+\frametitle{Multi-transducers: Example}
+The recipe is as follows: take a square and a round part, clean them both, paint the square part green and round part yellow,
+and glue them together. On completion of the recipe, a final transition simply requests the resulting product. Recipe transducer:
+$$T = (\Sigma, S, s_{0} f, g, 4, 3)$$
+where\\
+\Sigma = \{fsq, rd, sqrd, clean, green, yel, glue, glued, err, sqclean, rdclean, sqgreen, rdyellowg\},\\
+$S = \{s_{0}, s_{1}, s_{2}, s_{3}, s_{e}\}$\\
 
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-transducers: Example}
+Transition and output definitions:\\
+$f(s_{0}, (sq, rd, clean, clean)) = s_{1}$;\\
+$g(s_{0}, (sq, rd, clean, clean)) = (sqclean, rdclean, \epsilon)$; \\
+\vspace{0.2cm}
+$f(s_{1}, (\epsilon, \epsilon, green, yel))= s_{2}$;\\
+$g(s_{1}, (\epsilon, \epsilon, green, yel)) = (sqgreen, rdyellow, \epsilon)$;\\
+\vspace{0.2cm}
+$f(s_{2}, (\epsilon, \epsilon, glue, \epsilon)) = s_{3}$;\\
+$g(s_{2}, (\epsilon, \epsilon, glue, \epsilon)) = (glued, \epsilon,\epsilon)$;\\
+\vspace{0.2cm}
+$f(s_{3}, (\epsilon, \epsilon, \epsilon, \epsilon)) = s_{0}$;\\
+$g(s_{3}, (\epsilon, \epsilon, \epsilon, \epsilon)) = (\epsilon,\epsilon, sqrd)$\\
+\vspace{0.2cm}
+Any other input results in a transition to $s_{e}$ with output $(err, err, err)$
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-transducers: Example}
+\begin{figure}
+\includegraphics[scale=0.55]{images/milti-example.jpg}
+\label{multi_example}
+\caption{Target transducer T and resource transducers $T_{1}, . . . , T_{6}$ ($T_{5}$ is identical to $T_{1}$). Physical ports are shown greyed, and error states $s_{ej}$, are not shown. (\ast) on self-loops stands for $\epsilon, . . . , \epsilon, . . . | \epsilon, \epsilon$}
+\end{figure}
 
 
 \end{frame}
