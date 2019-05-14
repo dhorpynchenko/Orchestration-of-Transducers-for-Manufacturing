@@ -1,0 +1,9 @@
+# init s03
+s03 pump_fl s13->wheel_fl_ok
+s13 pump_fr s23->wheel_fr_ok
+s23 pump_rr s33->wheel_rr_ok
+s33 pump_rl s03->wheel_rl_ok
+s03 pump_fr s43->wheel_fr_ok
+s43 pump_fl s53->wheel_fl_ok
+s53 pump_rl s63->wheel_rl_ok
+s63 pump_rr s03->wheel_rr_ok

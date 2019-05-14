@@ -1,0 +1,11 @@
+# init s0
+s0 check_eng s1->engine_ok
+s1 change_fil s2->filter_ok
+s2 pump_fl s3->wheel_fl_ok
+s3 pump_fr s4->wheel_fr_ok
+s4 pump_rr s5->wheel_rr_ok
+s5 pump_rl s0->wheel_rl_ok
+s2 pump_fr s6->wheel_fr_ok
+s6 pump_fl s7->wheel_fl_ok
+s7 pump_rl s8->wheel_rl_ok
+s8 pump_rr s0->wheel_rr_ok
