@@ -10,6 +10,8 @@ Requirements:
 
 1. Install python package using `pip install graphviz`
 2. Install graphviz backend into your system https://graphviz.org/download/
+    
+    (Windows users must add to PATH `C:\Program Files (x86)\Graphviz2.38\bin`)
 </li>
 </ul>
 
