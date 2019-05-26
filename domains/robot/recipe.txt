@@ -1,0 +1,6 @@
+# init s0
+s0 fcF s1->fr
+s0 fcB s2->br
+s1 fcB s3->fr,br
+s2 fcF s3->fr,br
+s3 asR s0->rr

@@ -1,0 +1,3 @@
+# init s03
+s03 print_A3 s03->A3_print
+s03 print_A4 s03->A4_print

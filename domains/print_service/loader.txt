@@ -1,0 +1,2 @@
+# init s01
+s01 load_paper s01->paper_loaded

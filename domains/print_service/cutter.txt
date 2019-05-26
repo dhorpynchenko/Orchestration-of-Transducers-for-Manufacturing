@@ -1,0 +1,3 @@
+# init s02
+s02 cut_A3 s02->A3
+s02 cut_A4 s02->A4

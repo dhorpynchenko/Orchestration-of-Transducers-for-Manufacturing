@@ -1,0 +1,5 @@
+# init s01
+s01 fcF s02->fr
+s02 fcB s01->fr,br
+s01 fcB s03->br
+s03 fcF s01->fr,br

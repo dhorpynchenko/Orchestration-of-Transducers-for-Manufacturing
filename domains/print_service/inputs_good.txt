@@ -1,0 +1,6 @@
+load_paper
+cut_A3
+print_A3
+load_paper
+cut_A4
+print_A4

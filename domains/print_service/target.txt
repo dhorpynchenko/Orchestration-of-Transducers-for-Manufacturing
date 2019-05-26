@@ -1,0 +1,6 @@
+# init s0
+s0 load_paper s1->paper_loaded
+s1 cut_A3 s2->A3
+s1 cut_A4 s3->A4
+s2 print_A3 s0->A3_print
+s3 print_A4 s0->A4_print

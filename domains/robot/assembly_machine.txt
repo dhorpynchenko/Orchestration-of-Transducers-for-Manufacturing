@@ -1,0 +1,2 @@
+# init s04
+s04 asR s04->rr
