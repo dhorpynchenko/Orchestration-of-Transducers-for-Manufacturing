@@ -3,9 +3,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \title{\textbf{Synthesis of Orchestrations of Transducers for Manufacturing}}
-\author[Dmytro]{Dmytro Horpynchenko\\
+\author[Dmytro]{
+\\
+\vspace{5.5cm}
+Dmytro Horpynchenko\\
 \textit{1807584}}
-\date[May 13, 2019]{Multi-Port Transducer Setting}
+\date[May 13, 2019]{}
 \institute[Roma]{Università di Roma}
 
 \usetheme[pageofpages=of, % default - any character is good: di, /
@@ -29,7 +32,99 @@ Giuseppe De Giacomo, Moshe Y. Vardi, Paolo Felli, Natasha Alechina, Brian Logan
 \end{frame}
 
 \begin{frame}
-\frametitle{Problem overview}
+\frametitle{A bit of background
+}
+\begin{enumerate}
+    \item Manufacturing as a service
+    \item Adopting industry 4.0 is essential to maintain competitiveness. 
+    \item Process planning   
+\   item Manual $\rightarrow$ Automated
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Previous work on the automated synthesis of process planning
+}
+\framesubtitle{De Silva et al. 2016 and Felli et al. 2017}
+\begin{itemize}
+ \item Techniques based on AI behaviour composition 
+ \item In : a process recipe and a production topology 
+ \item Out : a process plan controller 
+ \end{itemize}
+ \alert{These problems are :} 
+ \begin{itemize}
+     \item polynomial in the size of the topology, (exponential in the number of resources and polynomial in their size), and exponential in the size of the process recipe and number of resources
+     \item Difficult to relate synthesis of controllers for manufacturing to the existing literature and tools on reactive synthesis
+ \end{itemize}
+ \end{frame}
+ 
+ \begin{frame}
+\frametitle{Uni-Transducer}
+\begin{block}{What is a transducer? A uni-transducer?}
+A transducer is a finite deterministic automaton with outputs, we consider here Mealy machines.
+Uni-transducer is a machine that takes a single input and produces a single output in each state.
+Model manufacturing resources and process.
+\end{block}
+\begin{alertblock}{Definition 1}
+A (uni-)transducer $ T = ( \Sigma, \Delta, S, s_{0}, f, g) $ is a deterministic transition system with inputs and outputs, where $\Sigma$ is the input alphabet, $\Delta$ is the output alphabet, S is the set of states , $ s_{0} $ the initial state, $ f: S \times \Sigma \rightarrow S $ is the transition function (which takes a state and an input symbol and returns the successor state) and $ g: S \times \Sigma \rightarrow \Delta $ is the output function (which returns the output of the transition).
+\end{alertblock}
+\end{frame}
+\begin{frame}{Uni-transducer example}
+$ T = ( \Sigma, \Delta, S, s_{0}, f, g) $ \\
+$\Sigma = \{cleansq, cleanrd, greensq, yellowrd\}$ \\
+Input alphabet encodes operations \\
+$\Delta = \{sqclean, rdclean, sqgreen, rdyellow, err \}$ \\
+Output alphabet encodes results of operations \\
+$S = {s_{0}, s_{1}, s_{2}, s_{e}}$ \\
+$f(s_{0}, cleansq)=s_{1}$ 
+$g(s_{0}, cleansq)=sqclean$
+    
+\end{frame}
+
+\begin{frame}{Uni-transducer example}
+\begin{figure}[htp]
+\centering
+\includegraphics[width=\linewidth]{images/ex1trans.JPG}
+\caption{Process recipe T and manufacturing resources $T_{1}$, $T_{2}$ and $T_{3}$}
+\label{fig:ex1trans}
+\end{figure}
+
+\end{frame}
+\begin{frame}{Uni-Transducer: Orchestration}
+\begin{alertblock}{Definition}
+Given a set of transducers $\mathnormal{T_{1},\dots,T_{m}}$ and a
+production recipe transducer $\mathnormal{T}$, the orchestration problem
+is the question whether there is a controller $\mathnormal{C}$ for $\mathnormal{P = T_{1} \times \dots \times T_{m}}$ which realizes $\mathnormal{T}$.
+\end{alertblock}
+\begin{itemize}
+    \item Output sequence of $\mathrm{T}$ on input $\mathnormal{w}$: $\mathnormal{\tau^{o}_{w,T} = T^{o}(a^{0})},\dots,\mathnormal{T^{o}(a^{0}}\dots\mathnormal{a^{i})}\dots$
+    \item $\mathnormal{C : \Sigma^{+}} \longrightarrow \mathrm{\{1,\dots,m\}}$
+    \item The output of $\mathnormal{C}$ on $\mathnormal{P}$ over the input $\mathnormal{w}$ is $\mathnormal{\tau^{o}_{w,C} = b^{0},\dots,b^{i}},\dots$, where $\mathnormal{b^{i} = g_{h}(s^{i}_{h},a^{i})}$
+    \item $\mathnormal{C}$ realizes $\mathnormal{T}$ if  $\mathnormal{\tau^{o}_{w,T} = \tau^{o}_{w,T}}$ for all $\mathnormal{w}$.
+\end{itemize}
+\begin{block}{Task of the controller}
+Decide, at each cycle, to which resource the input should be assigned.
+\end{block}    
+\end{frame}
+\begin{frame}{Uni-Transducer: Orchestrator Synthesis}
+\begin{itemize}
+    \item DFA Games
+    \item $\mathrm{G} = (\mathcal{X} \times \mathcal{Y},\mathrm{Q,q_{0},\delta, F})$
+    \item Win by playing forever
+    \item $\mathrm{PreC}(\mathcal{E}) = \{q \in \mathrm{Q}$ | for all $\mathcal{X} \in \mathcal{Y}$ exists $\mathrm{Y} \in \mathcal{Y}$ such that $\delta(q, (\mathrm{X,Y})) \in \mathcal{E}$ \}
+    \item Define $\mathrm{Win(G)}$ by greatest-fixpoint
+    \item $\mathcal{T}_{G} = (\mathrm{X \times Y, Q, q_{0}, \varrho, \gamma})$
+\end{itemize}
+\begin{alertblock}{Theorem}
+\textit{Checking whether there exists a controller $\mathnormal{C}$
+for $\mathnormal{P}$ that realizes $\mathnormal{T}$ can be done by solving the safety game
+$\mathnormal{G}$ defined above.}
+\end{alertblock}
+    
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-transducers:Problem overview}
 Uni-transducers are suitable only for  single pipeline processes.
 Meanwhile it is essential to:
 \begin{itemize}
@@ -37,11 +132,60 @@ Meanwhile it is essential to:
 \item Split raw materials apart
 \item Combine or assemble multiple items  to produce new entity type
 \end{itemize}
+
+\begin{block}{Definition}
+Deterministic transition system with multiple input/output ports is called multi-port transducer or \textit{multi-transducer}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-transducers: Ports}
+Unlike uni-transducers, all interaction between controller and transducers are done through out ports and depends on the nature of things sent within the port they are separated to:
+\begin{itemize}
+\item \textit{Physical} - accept/output physical objects such as parts. Physical output port can be bound only
+to one (physical) input port
+\item \textit{Virtual} - accept/output signals such as messages specifying that a particular operation should be performed. Virtual output port can be bound to multiple (virtual) input ports
+\end{itemize}
+Any type of input ports should not be bound to more than one output port.
+\\
+\begin{alertblock}{Note}
+All input ports must have input value and all output ports must provide an output value. In case of absence there are special empty value $\epsilon$.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-transducers: Ports}
+
+\begin{minipage}{0.5\textwidth}
+$ in_{x, y} $ - the input port $y$ of multi-transducer $T_{x}$\\
+$ out_{x, y} $ - the output port $y$ of multi-transducer $T_{x}$\\
+$ val(in_{x,y}), val(out_{x,y})$ - the value at the input/output port $y$ of transducer $T_{x}$\\
+$ (out_{x', y'}, in_{x, y})$ - \textit{port bindings}, a connection between the output port $y'$ of multi-transducer $x'$ and input port $y$ of multi-transducer $x$\\
+\end{minipage}
+\hspace{0.4cm}
+\begin{minipage}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=1]{images/mult_ports.png}
+\caption{Connection example: white/black ports are virtual/physical ports respectively.}
+\label{multi_ports}
+\end{figure}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-transducers: Environment and routing}
+Interaction with set of manufacturing resources (represented as transducers) is done using \textit{binding sets} and through an object so-called \textit{"Environment"}. Binding set is a set of port bindings that must be \textit{"legal"}: it must be consistent with requirements described above.
+
+\begin{figure}
+\includegraphics[scale=0.19]{images/mult_trans.png}
+\caption{Example of multi-transducers binding set. Inputs and outputs that have no value use spesial $\epsilon$ value}
+\end{figure}
 \end{frame}
 
 \begin{frame}
 \frametitle{Multi-transducers}
-Deterministic transition system with multiple input/output ports is called multi-port transducer or \textit{multi-transducer}:
+Considering defined above, multi-transducer is defined as follows:
 $$ T = (\Sigma, S, s_{0}, f, g, k, l) $$
 ,where\\
 $\Sigma$ is the alphabet (of both inputs and outputs)\\
@@ -51,38 +195,6 @@ $f : S \times \Sigma^{k} \to S$ is the transition function\\
 $ g : S \times \Sigma^{k} \to \Sigma^{l}$ is the output function\\
 $k$ is the number of $T$'s input ports\\
 $l$ is the number of $T$'s output ports
-\end{frame}
-
-\begin{frame}
-\frametitle{Multi-transducers: Ports}
-All interaction between environment and transducers are done through out ports.
-\\
-Depending on nature of things sent within the port they are separated to:
-\begin{itemize}
-\item \textit{Physical} - accept/output physical objects such as parts. Physical output port can be bound only
-to one (physical) input port
-\item \textit{Virtual} - accept/output signals such as messages specifying that a particular operation should be performed. Virtual output port can be bound to multiple (virtual) input ports
-\end{itemize}
-Any type of input ports should not be bound to more than one output port.
-\end{frame}
-
-\begin{frame}
-\frametitle{Multi-transducers: Ports}
-$ in_{x, y} $ - the input port $y$ of multi-transducer $T_{x}$\\
-$ out_{x, y} $ - the output port $y$ of multi-transducer $T_{x}$\\
-$ val(in_{x,y}), val(out_{x,y})$ - the value at the input/output port $y$ of transducer $T_{x}$\\
-$ (out_{x', y'}, in_{x, y})$ - \textit{port bindings}, a connection between the output port $y'$ of multi-transducer $x'$ and input port $y$ of multi-transducer $x$\\
-\end{frame}
-
-\begin{frame}
-\frametitle{Multi-transducers: Ports}
-A set $c$ of port bindings, henceforth called \textit{binding set}, must be consistent with a set of binding constraints $\mathcal{B}$, specified as boolean combinations of atoms of the form $ (out_{x', y'}, in_{x, y})$; a binding set c is said to be \textit{legal} iff $c \models \mathcal{B}$.\\
-We use the set $\mathcal{B}$ to impose three kinds of requirements: \\
-\begin{itemize}
-\item for all $x, y$ (with $x \in \{0, 1, . . . , m\}$ and $y \in \{1, . . . ,k_{x}\}$) there exists at most one $x', y'$ such that $ (out_{x', y'}, in_{x, y}) \in c$ (if, for some $z \in \{1, . . . , k_{x}\}$,$ in_{x,z}$ does not appear in $c$, its value is assumed to be empty, i.e., $val(in_{x,z}) = \epsilon)$;
-\item all physical output ports $out_{x', y'}$ occur in at most one binding $ (out_{x', y'}, in_{x, y}) \in c$
-\item arbitrary requirements specifying, e.g., the possible physical connections between machines on the shop floor, or the set of virtual connections determined by the possible communication routes between resources.
-\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -105,28 +217,8 @@ Considering a production $P$:
 $$P = T_{1} \times . . . \times T_{m}$$
 a controller $C$ for $P$ is defined as:
 $$C : (\Sigma_{k})^{+} \to Cntl$$
-,where $Cntl$ is denoting the set of all possible port binding sets.\\
-\begin{alertblock}{Note}
-Opposite to uni-transducers case, the controller binds ports, and all transducers $T_{1}, . . . , T_{m}$ get input (possibly empty) and move at every step.
-\end{alertblock}
-\end{frame}
-
-\begin{frame}
-\frametitle{Orchestration}
-The sequence of (global) states and outputs generated by the controller on $w = a^{0}a^{1}. . . $ is, respectively,
-$$\tau_{w,C} = (s_{01} . . s_{0m}) . . . (s_{i1} . . . s_{im}) . . . $$
-$$\tau^{o}_{w,C} = b^{0} . . . b^{i} . . .$$
-where\\
-$C(a^{0} . . . a^{i}) = c^{i}$ and $c^{i}$ is legal \\
-$val^{i}(in_{x,y}) = val^{i}(out_{x',y'})$ for $ (out_{x', y'}, in_{x, y}) \in c^{i}$\\
-$s^{i+1}_{x} = f_{x}(s^{i}_{x}, val^{i}(in_{x}))$ for $ x \in \{1, . . . ,m\}$\\
-$val^{i}(out_{x}) = g_{x}(s^{i}_{x}, val^{i}(in_{x}))$ for $ x \in \{1, . . . ,m\}$\\
-$val^{i}(out_{0}) = a^{i}$ (Environment is represented as transducer $T_{0}$)\\
-$val^{i}(out_{x,y}) = b^{i}$ if $(out_{x,y} in_{0,y'}) \in c^{i}$
-\end{frame}
-
-\begin{frame}
-\frametitle{Orchestration}
+,where $Cntl$ is denoting the set of all possible port binding sets.
+\\
 Identically to uni-transducers case,
 \begin{theorem}
 $C$ realizes $T$ if $\tau^{o}(w, T) = \tau^{o}(w, C)$ for all $w$
@@ -147,59 +239,17 @@ $\delta$ is the states transition function (see next slide for definition)
 \end{frame}
 
 \begin{frame}
-\frametitle{Orchestrator Synthesis: Transition function}
-States transition function $\delta$ is defined as follows: \\
-$\delta((s, s_{1}, . . .  , s_{m}), a, c) = (s', s_{1}', . . .  , s_{m}')$ if the following conditions hold:
-\begin{itemize}
-\item $s_{0} = f(s, a)$
-\item $c$ is legal;
-\item $val(in_{x,y}) = val(out_{x',y'})$for $(out_{x',y'}, in_{x,y}) \in c$;
-\item $s_{x}' = f_{x}(s_{x}, val(in_{x})) $ for $ x \in \{1, . . . ,m\}$;
-\item $ val(out_{x}) = g_{x}(s_{x}, val(in_{x})) $ for $ x \in \{1, . . . ,m\}$;
-\item $val(out_{0}) = a$;
-\item $val(out_{x,y}) = g(s, val(out_{0}))_{y'}$ if $(out_{x,y}, in_{0, y'}) \in c$, (the value $b_{y'}$ of the output port $y'$ of the target is the same of the value of the output port $y$ of the available transducer $x$, when $c$ binds $y$ to $y'$.
-\end{itemize}
-$\delta((s, s_{1}, . . .  , s_{m}), a, c) = q_{err}$, otherwise.
-\end{frame}
-
-\begin{frame}
-\frametitle{Multi-transducers: Example}
-The recipe is as follows: take a square and a round part, clean them both, paint the square part green and round part yellow,
-and glue them together. On completion of the recipe, a final transition simply requests the resulting product. Recipe transducer:
-$$T = (\Sigma, S, s_{0} f, g, 4, 3)$$
-where\\
-\Sigma = \{fsq, rd, sqrd, clean, green, yel, glue, glued, err, sqclean, rdclean, sqgreen, rdyellow\},\\
-$S = \{s_{0}, s_{1}, s_{2}, s_{3}, s_{e}\}$\\
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Multi-transducers: Example}
-Transition and output definitions:\\
-$f(s_{0}, (sq, rd, clean, clean)) = s_{1}$;\\
-$g(s_{0}, (sq, rd, clean, clean)) = (sqclean, rdclean, \epsilon)$; \\
-\vspace{0.2cm}
-$f(s_{1}, (\epsilon, \epsilon, green, yel))= s_{2}$;\\
-$g(s_{1}, (\epsilon, \epsilon, green, yel)) = (sqgreen, rdyellow, \epsilon)$;\\
-\vspace{0.2cm}
-$f(s_{2}, (\epsilon, \epsilon, glue, \epsilon)) = s_{3}$;\\
-$g(s_{2}, (\epsilon, \epsilon, glue, \epsilon)) = (glued, \epsilon,\epsilon)$;\\
-\vspace{0.2cm}
-$f(s_{3}, (\epsilon, \epsilon, \epsilon, \epsilon)) = s_{0}$;\\
-$g(s_{3}, (\epsilon, \epsilon, \epsilon, \epsilon)) = (\epsilon,\epsilon, sqrd)$\\
-\vspace{0.2cm}
-Any other input results in a transition to $s_{e}$ with output $(err, err, err)$
-\end{frame}
-
-\begin{frame}
-\frametitle{Multi-transducers: Example}
-\begin{figure}
-\includegraphics[scale=0.55]{images/milti-example.jpg}
-\label{multi_example}
-\caption{Target transducer T and resource transducers $T_{1}, . . . , T_{6}$ ($T_{5}$ is identical to $T_{1}$). Physical ports are shown greyed, and error states $s_{ej}$, are not shown. (\ast) on self-loops stands for $\epsilon, . . . , \epsilon, . . . | \epsilon, \epsilon$}
-\end{figure}
-
-
+\frametitle{Example: Implementation of orchestration of uni-transducer setting}
+As the practical part of paper analysis orchestration of uni-transducers setting was implemented in Python.
+\\
+\vspace{0.4cm}
+Description of the target transducer and manufacturing resources must be provided as text files using special notation:
+\\
+\textit{state input newstate->output}
+\\
+\begin{block}{Read more}
+Full description,python environment setup instruction, this slides and domains examples can be found on GitHub repository \url{https://github.com/dhorpynchenko/Orchestration-of-Transducers-for-Manufacturing}
+\end{block}
 \end{frame}
 
 \end{document}
